@@ -8,7 +8,7 @@
     powered: false,
     octave: 4,
     activeNotes: new Map(), // note -> synth voice
-    waveform: 'sawtooth',
+    waveform: 'sine',
     adsr: { attack: 0.05, decay: 0.2, sustain: 0.5, release: 0.5 },
     filter: { type: 'lowpass', frequency: 2000, Q: 1 },
     lfo: { rate: 2, depth: 0, target: 'filter' },
@@ -70,13 +70,11 @@
   function applyLfoTarget() {
     if (!lfoGain) return;
     lfoGain.disconnect();
-    const depth = state.lfo.depth * state.lfo.rate * 0.5;
-    lfoGain.gain.value = depth;
+    lfoGain.gain.value = state.lfo.depth * 2000;
     if (state.lfo.target === 'filter') {
-      const lfoScaled = new Tone.Multiply(state.filter.frequency * state.lfo.depth);
       lfoGain.connect(filter.frequency);
     } else if (state.lfo.target === 'pitch') {
-      // pitch modulation applied per-note
+      // pitch modulation applied per-note via shared lfoGain → osc detune
     } else if (state.lfo.target === 'volume') {
       lfoGain.connect(masterVol.volume);
     }
@@ -116,10 +114,8 @@
     voiceGain.connect(filter);
 
     if (state.lfo.target === 'pitch' && lfoGain) {
-      const lfoScaled = new Tone.Multiply(state.lfo.depth * 100);
-      lfoGain.connect(lfoScaled);
-      lfoScaled.connect(osc1.detune);
-      if (osc2Node) lfoScaled.connect(osc2Node.detune);
+      lfoGain.connect(osc1.detune);
+      if (osc2Node) lfoGain.connect(osc2Node.detune);
     }
 
     osc1.start();
@@ -230,8 +226,6 @@
   function updateOctaveDisplay() {
     const el = document.getElementById('octave-display');
     if (el) el.textContent = state.octave;
-    // Re-render piano keys with new octave labels
-    renderPianoKeyLabels();
   }
 
   function updateVoiceLEDs() {
@@ -586,11 +580,6 @@
         container.appendChild(key);
       }
     }
-  }
-
-  function renderPianoKeyLabels() {
-    // Update note data attributes based on current octave for keyboard shortcut highlighting
-    // Keys already have absolute octave labels; this could be extended if needed
   }
 
   // ===== DOM READY =====
