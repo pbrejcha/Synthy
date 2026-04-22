@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthy — Web Synthesizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="synth-header">
+    <h1>Synthy</h1>
+    <p>Web-Based Synthesizer · Tone.js</p>
+  </header>
+
+  <!-- CHASSIS -->
+  <main class="synth-chassis">
+
+    <!-- VISUALIZER BAR -->
+    <div style="margin-bottom:16px; background:#0a0a1e; border:1px solid #2a4a7a; border-radius:8px; padding:8px; display:flex; align-items:center; gap:12px;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <button id="power-btn" class="power-btn" title="Power On/Off">⏻</button>
+        <span id="power-led" class="led"></span>
+      </div>
+      <canvas id="visualizer" width="900" height="50" style="flex:1; border-radius:4px; background:#05050f;"></canvas>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+        <div class="knob-group">
+          <canvas id="knob-volume" class="knob-wrapper"></canvas>
+          <span class="knob-label">Vol</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP ROW: OSC1 | OSC2 | ADSR | FILTER -->
+    <div class="synth-top-row">
+
+      <!-- OSC 1 -->
+      <div class="synth-section">
+        <div class="section-label">Oscillator 1</div>
+        <div class="waveform-selector">
+          <div class="waveform-btn-row">
+            <button class="wave-btn active" data-osc="1" data-wave="sine" title="Sine">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M0 7 Q6 0 12 7 Q18 14 24 7"/>
+              </svg>
+            </button>
+            <button class="wave-btn" data-osc="1" data-wave="triangle" title="Triangle">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M0 7 L6 1 L18 13 L24 7"/>
+              </svg>
+            </button>
+            <button class="wave-btn" data-osc="1" data-wave="sawtooth" title="Sawtooth">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M0 13 L12 1 L12 13 L24 1"/>
+              </svg>
+            </button>
+            <button class="wave-btn" data-osc="1" data-wave="square" title="Square">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M0 13 L0 1 L12 1 L12 13 L24 13 L24 1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="knob-row" style="margin-top:10px;">
+          <div class="knob-group">
+            <canvas id="knob-portamento" class="knob-wrapper"></canvas>
+            <span class="knob-label">Glide</span>
+            <span class="knob-value">0.00</span>
+          </div>
+        </div>
+
+        <div class="octave-control">
+          <button id="octave-down" class="octave-btn">−</button>
+          <span class="knob-label">OCT</span>
+          <span id="octave-display" class="octave-display">4</span>
+          <button id="octave-up" class="octave-btn">+</button>
+        </div>
+      </div>
+
+      <!-- OSC 2 -->
+      <div class="synth-section">
+        <div class="section-label" style="display:flex; align-items:center; justify-content:space-between;">
+          <span>Oscillator 2</span>
+          <button id="osc2-toggle" class="toggle-btn" style="padding:2px 8px; font-size:0.55rem;">OFF</button>
+        </div>
+        <div class="waveform-selector">
+          <div class="waveform-btn-row">
+            <button class="wave-btn" data-osc="2" data-wave="sine" title="Sine">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M0 7 Q6 0 12 7 Q18 14 24 7"/>
+              </svg>
+            </button>
+            <button class="wave-btn" data-osc="2" data-wave="triangle" title="Triangle">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M0 7 L6 1 L18 13 L24 7"/>
+              </svg>
+            </button>
+            <button class="wave-btn active" data-osc="2" data-wave="square" title="Square">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M0 13 L0 1 L12 1 L12 13 L24 13 L24 1"/>
+              </svg>
+            </button>
+            <button class="wave-btn" data-osc="2" data-wave="sawtooth" title="Sawtooth">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M0 13 L12 1 L12 13 L24 1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="knob-row" style="margin-top:10px;">
+          <div class="knob-group">
+            <canvas id="knob-osc2-detune" class="knob-wrapper"></canvas>
+            <span class="knob-label">Detune</span>
+            <span class="knob-value">0</span>
+          </div>
+        </div>
+
+        <div style="margin-top:8px; text-align:center;">
+          <div class="select-group">
+            <span class="select-label">Octave Shift</span>
+            <select class="synth-select" id="osc2-octave">
+              <option value="-2">-2</option>
+              <option value="-1">-1</option>
+              <option value="0" selected>0</option>
+              <option value="1">+1</option>
+              <option value="2">+2</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADSR ENVELOPE -->
+      <div class="synth-section">
+        <div class="section-label">Envelope</div>
+        <div class="knob-row">
+          <div class="knob-group">
+            <canvas id="knob-attack" class="knob-wrapper"></canvas>
+            <span class="knob-label">Attack</span>
+            <span class="knob-value">0.05</span>
+          </div>
+          <div class="knob-group">
+            <canvas id="knob-decay" class="knob-wrapper"></canvas>
+            <span class="knob-label">Decay</span>
+            <span class="knob-value">0.20</span>
+          </div>
+          <div class="knob-group">
+            <canvas id="knob-sustain" class="knob-wrapper"></canvas>
+            <span class="knob-label">Sustain</span>
+            <span class="knob-value">0.50</span>
+          </div>
+          <div class="knob-group">
+            <canvas id="knob-release" class="knob-wrapper"></canvas>
+            <span class="knob-label">Release</span>
+            <span class="knob-value">0.50</span>
+          </div>
+        </div>
+        <canvas id="adsr-canvas" width="200" height="40" class="adsr-visual"></canvas>
+      </div>
+
+      <!-- FILTER -->
+      <div class="synth-section">
+        <div class="section-label">Filter</div>
+        <div class="select-group" style="margin-bottom:10px;">
+          <span class="select-label">Type</span>
+          <select id="filter-type" class="synth-select">
+            <option value="lowpass" selected>Lowpass</option>
+            <option value="highpass">Highpass</option>
+            <option value="bandpass">Bandpass</option>
+            <option value="notch">Notch</option>
+            <option value="allpass">Allpass</option>
+          </select>
+        </div>
+        <div class="knob-row">
+          <div class="knob-group">
+            <canvas id="knob-filter-freq" class="knob-wrapper"></canvas>
+            <span class="knob-label">Freq</span>
+            <span class="knob-value">2000</span>
+          </div>
+          <div class="knob-group">
+            <canvas id="knob-filter-q" class="knob-wrapper"></canvas>
+            <span class="knob-label">Reso</span>
+            <span class="knob-value">1.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FX ROW: LFO | EFFECTS | POLYPHONY/MISC -->
+    <div class="synth-fx-row">
+
+      <!-- LFO -->
+      <div class="synth-section">
+        <div class="section-label">LFO</div>
+        <div class="select-group" style="margin-bottom:10px;">
+          <span class="select-label">Target</span>
+          <select id="lfo-target" class="synth-select">
+            <option value="filter" selected>Filter Freq</option>
+            <option value="pitch">Pitch (Vibrato)</option>
+            <option value="volume">Volume (Tremolo)</option>
+          </select>
+        </div>
+        <div class="knob-row">
+          <div class="knob-group">
+            <canvas id="knob-lfo-rate" class="knob-wrapper"></canvas>
+            <span class="knob-label">Rate</span>
+            <span class="knob-value">2.00</span>
+          </div>
+          <div class="knob-group">
+            <canvas id="knob-lfo-depth" class="knob-wrapper"></canvas>
+            <span class="knob-label">Depth</span>
+            <span class="knob-value">0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- EFFECTS -->
+      <div class="synth-section">
+        <div class="section-label">Effects</div>
+        <div class="knob-row">
+          <div class="knob-group">
+            <canvas id="knob-reverb" class="knob-wrapper"></canvas>
+            <span class="knob-label">Reverb</span>
+            <span class="knob-value">0.00</span>
+          </div>
+          <div class="knob-group">
+            <canvas id="knob-delay" class="knob-wrapper"></canvas>
+            <span class="knob-label">Delay</span>
+            <span class="knob-value">0.00</span>
+          </div>
+          <div class="knob-group">
+            <canvas id="knob-delay-time" class="knob-wrapper"></canvas>
+            <span class="knob-label">D.Time</span>
+            <span class="knob-value">0.25</span>
+          </div>
+          <div class="knob-group">
+            <canvas id="knob-chorus" class="knob-wrapper"></canvas>
+            <span class="knob-label">Chorus</span>
+            <span class="knob-value">0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- POLYPHONY & INFO -->
+      <div class="synth-section">
+        <div class="section-label">Voices</div>
+        <div class="poly-display">
+          <div class="voice-led"></div>
+          <div class="voice-led"></div>
+          <div class="voice-led"></div>
+          <div class="voice-led"></div>
+          <div class="voice-led"></div>
+          <div class="voice-led"></div>
+          <div class="voice-led"></div>
+          <div class="voice-led"></div>
+        </div>
+        <div style="margin-top: 16px; font-size:0.6rem; color:var(--text-secondary); text-align:center; line-height:1.8;">
+          <div style="color:var(--accent-2); margin-bottom:6px; letter-spacing:2px; font-size:0.55rem;">KEYBOARD SHORTCUTS</div>
+          <div><span style="color:var(--text-primary);">A S D F G H J K L</span> → white keys</div>
+          <div><span style="color:var(--text-primary);">W E T Y U O P</span> → black keys</div>
+          <div style="margin-top:4px;"><span style="color:var(--text-primary);">Z / X</span> → octave down/up</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PIANO KEYBOARD -->
+    <div class="keyboard-section">
+      <div class="keyboard-header">
+        <div class="section-label" style="margin:0; border:none; padding:0;">Piano Keyboard</div>
+        <div class="keyboard-hint">Click keys or use computer keyboard · Z/X to change octave</div>
+      </div>
+      <div class="keyboard-container">
+        <div id="piano-keys" class="keyboard"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="margin-top:16px; color:var(--text-secondary); font-size:0.6rem; letter-spacing:2px; text-align:center;">
+    Synthy · Built with Tone.js · Click Power to start audio
+  </footer>
+
+  <!-- Tone.js CDN -->
+  <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
+  <script src="synth.js"></script>
+</body>
+</html>
