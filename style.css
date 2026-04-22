@@ -34,7 +34,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   padding: 20px;
   background-image:
     radial-gradient(ellipse at top, #1a1a3e 0%, #1a1a2e 60%),
@@ -73,6 +73,7 @@ body {
 .synth-chassis {
   width: 100%;
   max-width: 1200px;
+  margin: 0 auto;
   background: linear-gradient(180deg, #1e2040 0%, #141630 100%);
   border: 2px solid var(--border);
   border-radius: 16px;
