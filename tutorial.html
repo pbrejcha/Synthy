@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthy — Synthesis Tutorial</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .tutorial-chassis {
+      width: 100%;
+      max-width: 860px;
+      background: linear-gradient(180deg, #1e2040 0%, #141630 100%);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 40px;
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .tutorial-back {
+      display: inline-block;
+      margin-bottom: 28px;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: var(--accent-2);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .tutorial-back:hover {
+      color: var(--text-primary);
+    }
+
+    .tutorial-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: var(--accent);
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+      margin-bottom: 6px;
+    }
+
+    .tutorial-subtitle {
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+    }
+
+    .tutorial-section {
+      margin-bottom: 36px;
+    }
+
+    .tutorial-section h2 {
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      color: var(--accent-2);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tutorial-section p {
+      font-size: 0.78rem;
+      line-height: 1.9;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    .tutorial-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .tutorial-section strong {
+      color: var(--text-primary);
+    }
+
+    .tip-box {
+      background: rgba(100, 220, 200, 0.06);
+      border-left: 3px solid var(--accent-2);
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin-top: 14px;
+    }
+
+    .tip-box p {
+      margin-bottom: 0;
+    }
+
+    .term {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="synth-header">
+    <h1>Synthy</h1>
+    <p>Web-Based Synthesizer · Tone.js</p>
+  </header>
+
+  <main class="tutorial-chassis">
+
+    <a href="index.html" class="tutorial-back">← Back to Synthy</a>
+
+    <div class="tutorial-title">Synthesis Tutorial</div>
+    <div class="tutorial-subtitle">A guide to subtractive synthesis</div>
+
+    <!-- INTRO -->
+    <div class="tutorial-section">
+      <h2>What Is a Synthesizer?</h2>
+      <p>
+        A <strong>synthesizer</strong> is an electronic instrument that generates audio signals and shapes them into musical sounds. Unlike samplers, which play back recorded audio, synthesizers build sounds from scratch using mathematical waveforms.
+      </p>
+      <p>
+        <strong>Synthy</strong> uses a technique called <span class="term">subtractive synthesis</span> — the most common method found in classic hardware synths. You start with a harmonically rich waveform and then <em>subtract</em> (filter out) frequencies to sculpt the final tone.
+      </p>
+    </div>
+
+    <!-- OSCILLATORS -->
+    <div class="tutorial-section">
+      <h2>Oscillators</h2>
+      <p>
+        An <span class="term">oscillator</span> is the sound source of a synthesizer. It continuously generates a repeating waveform at a chosen pitch. The shape of the waveform determines the raw timbre (tone color) before any processing.
+      </p>
+      <p>
+        Synthy provides two independent oscillators. Each supports four classic waveforms:
+      </p>
+      <p>
+        <strong>Sine</strong> — The purest waveform, containing only the fundamental frequency with no overtones. It produces a soft, flute-like tone.
+      </p>
+      <p>
+        <strong>Triangle</strong> — Similar to a sine wave but with a small number of odd harmonics. Slightly brighter with a hollow, woody character.
+      </p>
+      <p>
+        <strong>Sawtooth</strong> — Contains all harmonics (both odd and even) at decreasing amplitude. This creates a bright, buzzy sound ideal for leads and bass lines.
+      </p>
+      <p>
+        <strong>Square</strong> — Contains only odd harmonics, giving it a hollow, reedy quality reminiscent of a clarinet or vintage video game sounds.
+      </p>
+      <div class="tip-box">
+        <p>
+          <strong>Tip:</strong> Layer <strong>Oscillator 1</strong> and <strong>Oscillator 2</strong> with different waveforms or slight detuning to create a much richer, thicker sound. Even a few cents of detune between two sawtooth oscillators produces the classic "supersaw" sound used in trance and EDM.
+        </p>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="tutorial-section">
+      <h2>Filter</h2>
+      <p>
+        The <span class="term">filter</span> is the heart of subtractive synthesis. It removes certain frequencies from the oscillator signal, shaping the brightness or darkness of the sound.
+      </p>
+      <p>
+        <strong>Frequency (Cutoff)</strong> — Sets the point at which the filter begins to take effect. A low cutoff makes the sound muffled and dark; a high cutoff lets most frequencies through, producing a brighter sound.
+      </p>
+      <p>
+        <strong>Resonance (Q)</strong> — Boosts the frequencies right at the cutoff point, creating a characteristic peak. High resonance values produce a sharp, whistling coloration and at extreme settings can cause self-oscillation.
+      </p>
+      <p>
+        Synthy supports five filter types:
+      </p>
+      <p>
+        <strong>Lowpass</strong> — Allows frequencies below the cutoff to pass through while attenuating higher frequencies. The most common filter type in synthesis.
+      </p>
+      <p>
+        <strong>Highpass</strong> — The opposite of lowpass — lets high frequencies through and rolls off the lows.
+      </p>
+      <p>
+        <strong>Bandpass</strong> — Passes a band of frequencies around the cutoff and attenuates everything else. Useful for telephone and radio effects.
+      </p>
+      <p>
+        <strong>Notch</strong> — The inverse of bandpass — cuts a narrow band of frequencies. Good for removing hum or adding a subtle comb-filter effect.
+      </p>
+      <p>
+        <strong>Allpass</strong> — Passes all frequencies but shifts their phase, which is useful for creating phaser-like effects.
+      </p>
+    </div>
+
+    <!-- ENVELOPE -->
+    <div class="tutorial-section">
+      <h2>Envelope (ADSR)</h2>
+      <p>
+        An <span class="term">envelope</span> controls how a parameter (usually volume) changes over time when a note is played. The most common envelope shape is described by four stages: <strong>Attack · Decay · Sustain · Release</strong>.
+      </p>
+      <p>
+        <strong>Attack</strong> — The time it takes for the sound to rise from silence to its peak level after a key is pressed. A short attack (near 0) produces a punchy, percussive onset; a long attack creates a gradual swell.
+      </p>
+      <p>
+        <strong>Decay</strong> — After the peak, the time it takes for the level to fall down to the sustain level.
+      </p>
+      <p>
+        <strong>Sustain</strong> — The level at which the sound holds as long as the key is held down. Unlike the other stages, sustain is a level (0–1), not a time value.
+      </p>
+      <p>
+        <strong>Release</strong> — The time it takes for the sound to fade to silence after the key is released.
+      </p>
+      <div class="tip-box">
+        <p>
+          <strong>Tip:</strong> For a piano-like sound, try a very short attack, a medium decay, a medium sustain, and a medium release. For a string pad, use a long attack, long decay, high sustain, and long release.
+        </p>
+      </div>
+    </div>
+
+    <!-- LFO -->
+    <div class="tutorial-section">
+      <h2>LFO — Low Frequency Oscillator</h2>
+      <p>
+        A <span class="term">Low Frequency Oscillator (LFO)</span> is an oscillator that runs at a very slow rate — typically below 20 Hz — so you don't hear it as a pitch. Instead, its output is used to modulate (periodically vary) other parameters, adding movement and life to a sound.
+      </p>
+      <p>
+        <strong>Rate</strong> — How fast the LFO oscillates. A slow rate (0.1–1 Hz) creates a gentle, gradual sweep; a faster rate (5–10 Hz) produces a rapid trembling effect.
+      </p>
+      <p>
+        <strong>Depth</strong> — How much the LFO affects the target parameter. At 0 the LFO has no effect; higher values produce more dramatic modulation.
+      </p>
+      <p>
+        Synthy's LFO can target three destinations:
+      </p>
+      <p>
+        <strong>Filter Freq</strong> — Sweeps the filter cutoff up and down rhythmically, creating a "wah-wah" or "autowah" effect.
+      </p>
+      <p>
+        <strong>Pitch (Vibrato)</strong> — Slightly varies the pitch of the oscillators, producing the expressive wobble known as vibrato — used widely in vocals and solo instrument sounds.
+      </p>
+      <p>
+        <strong>Volume (Tremolo)</strong> — Rapidly varies the volume, creating a tremolo effect common in vintage electric pianos and guitar amplifiers.
+      </p>
+    </div>
+
+    <!-- EFFECTS -->
+    <div class="tutorial-section">
+      <h2>Effects</h2>
+      <p>
+        After the oscillators, filter, and envelope have shaped the sound, <span class="term">effects</span> are applied to add spatial depth and texture.
+      </p>
+      <p>
+        <strong>Reverb</strong> — Simulates the acoustic reflections of a space (a room, hall, or cave). A little reverb makes sounds feel less dry and isolated; a lot places them in a vast, ambient environment.
+      </p>
+      <p>
+        <strong>Delay</strong> — Adds one or more echoes of the original sound, spaced apart by a set time interval. Synced to a musical tempo, delay can create rhythmic patterns.
+      </p>
+      <p>
+        <strong>Delay Time</strong> — Sets how long after the original note each echo occurs (in seconds). Short times below 100 ms can create a slapback echo; longer times produce distinct, separate repeats.
+      </p>
+      <p>
+        <strong>Chorus</strong> — Mixes slightly pitch-shifted and time-delayed copies of the signal together with the original, simulating the sound of multiple instruments playing in unison. It adds richness and width.
+      </p>
+    </div>
+
+    <!-- POLYPHONY -->
+    <div class="tutorial-section">
+      <h2>Polyphony &amp; Voices</h2>
+      <p>
+        <span class="term">Polyphony</span> refers to how many notes a synthesizer can play simultaneously. A <em>monophonic</em> synth plays only one note at a time, while a <em>polyphonic</em> synth can play chords.
+      </p>
+      <p>
+        Each simultaneous note requires a separate <strong>voice</strong> — a complete signal path from oscillator through filter and envelope to the output. Synthy provides up to <strong>8 voices</strong>, shown as the LED indicators in the Voices panel. When all 8 are in use, playing an additional note will steal the oldest active voice.
+      </p>
+      <p>
+        <strong>Glide (Portamento)</strong> — When set above 0, the pitch slides smoothly from one note to the next rather than jumping instantly. This works best in monophonic playing style and is especially expressive for lead lines.
+      </p>
+    </div>
+
+    <!-- GETTING STARTED -->
+    <div class="tutorial-section">
+      <h2>Getting Started with Synthy</h2>
+      <p>
+        1. Press the <strong>Power</strong> button (⏻) to initialize the audio engine. Your browser may require a user interaction before audio can play.
+      </p>
+      <p>
+        2. Click a key on the <strong>piano keyboard</strong> or use your computer keyboard (<strong>A S D F G H J K L</strong> for white keys, <strong>W E T Y U O P</strong> for black keys).
+      </p>
+      <p>
+        3. Adjust the <strong>Volume</strong> knob in the visualizer bar to set your listening level.
+      </p>
+      <p>
+        4. Choose a waveform in <strong>Oscillator 1</strong> and experiment with the <strong>Filter</strong> cutoff to hear how different settings change the sound.
+      </p>
+      <p>
+        5. Sculpt the amplitude over time with the <strong>ADSR Envelope</strong>, then add movement with the <strong>LFO</strong> and depth with the <strong>Effects</strong>.
+      </p>
+      <div class="tip-box">
+        <p>
+          <strong>Tip:</strong> Use <strong>Z</strong> and <strong>X</strong> on your keyboard to shift the playable octave range down or up.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="margin-top:16px; color:var(--text-secondary); font-size:0.6rem; letter-spacing:2px; text-align:center;">
+    Synthy · Built with Tone.js · Click Power to start audio
+  </footer>
+
+</body>
+</html>
