@@ -461,6 +461,182 @@
     ctx.fill();
   }
 
+  // ===== SEQUENCER =====
+
+  const seqState = {
+    running: false,
+    bpm: 120,
+    steps: 16,
+    currentStep: -1,
+    pattern: Array.from({ length: 16 }, () => ({ active: false, note: 'C4' })),
+  };
+
+  const SEQ_BPM_MIN = 40;
+  const SEQ_BPM_MAX = 240;
+  const SEQ_BPM_STEP = 5;
+  const SEQ_NOTE_CLEANUP_BUFFER = 0.3; // extra seconds before disposing Tone.js nodes
+
+  let seqLoop = null;
+
+  // Note list spanning C2–B5 for the step note selectors
+  const SEQ_NOTES = [];
+  for (let oct = 2; oct <= 5; oct++) {
+    for (const name of ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']) {
+      SEQ_NOTES.push(`${name}${oct}`);
+    }
+  }
+
+  function buildSequencerGrid() {
+    const grid = document.getElementById('seq-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    for (let i = 0; i < seqState.steps; i++) {
+      const step = seqState.pattern[i];
+
+      const cell = document.createElement('div');
+      cell.className = 'seq-step';
+      cell.dataset.step = i;
+
+      const pad = document.createElement('button');
+      pad.className = 'seq-step-pad';
+      pad.dataset.step = i;
+      pad.textContent = i + 1;
+      pad.addEventListener('click', () => toggleSeqStep(i));
+
+      const select = document.createElement('select');
+      select.className = 'seq-note-select';
+      select.dataset.step = i;
+      SEQ_NOTES.forEach(note => {
+        const opt = document.createElement('option');
+        opt.value = note;
+        opt.textContent = note;
+        opt.selected = note === step.note;
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', () => {
+        seqState.pattern[i].note = select.value;
+      });
+
+      cell.appendChild(pad);
+      cell.appendChild(select);
+      grid.appendChild(cell);
+    }
+  }
+
+  function toggleSeqStep(i) {
+    seqState.pattern[i].active = !seqState.pattern[i].active;
+    const pad = document.querySelector(`.seq-step-pad[data-step="${i}"]`);
+    const cell = document.querySelector(`.seq-step[data-step="${i}"]`);
+    if (pad) pad.classList.toggle('active', seqState.pattern[i].active);
+    if (cell) cell.classList.toggle('seq-step--active', seqState.pattern[i].active);
+  }
+
+  function updateSeqStepDisplay(stepIdx) {
+    document.querySelectorAll('.seq-step-pad').forEach((pad, i) => {
+      pad.classList.toggle('playing', i === stepIdx);
+    });
+  }
+
+  // Trigger a single sequencer note using AudioContext-scheduled time
+  function seqTriggerNote(note, time) {
+    if (!filter) return;
+
+    const freq = Tone.Frequency(note).toFrequency();
+    const noteDur = Tone.Time('16n').toSeconds() * 0.8;
+
+    const osc1 = new Tone.OmniOscillator({ type: state.waveform, frequency: freq, detune: 0 });
+
+    const osc2Node = state.osc2.enabled
+      ? new Tone.OmniOscillator({
+          type: state.osc2.waveform,
+          frequency: freq * Math.pow(2, state.osc2.octave) * Math.pow(2, state.osc2.detune / 1200),
+          detune: state.osc2.detune,
+        })
+      : null;
+
+    const env = new Tone.AmplitudeEnvelope({
+      attack: state.adsr.attack,
+      decay: state.adsr.decay,
+      sustain: state.adsr.sustain,
+      release: state.adsr.release,
+    });
+
+    const voiceGain = new Tone.Gain(osc2Node ? 0.5 : 1);
+
+    osc1.connect(env);
+    if (osc2Node) { osc2Node.connect(env); osc2Node.start(time); }
+    env.connect(voiceGain);
+    voiceGain.connect(filter);
+
+    if (state.lfo.target === 'pitch' && lfoGain) {
+      lfoGain.connect(osc1.detune);
+      if (osc2Node) lfoGain.connect(osc2Node.detune);
+    }
+
+    osc1.start(time);
+    env.triggerAttackRelease(noteDur, time);
+
+    // Clean up nodes after the note finishes
+    const cleanupMs = Math.max((time - Tone.now() + noteDur + state.adsr.release + SEQ_NOTE_CLEANUP_BUFFER) * 1000, 200);
+    setTimeout(() => {
+      try { osc1.stop(); osc1.disconnect(); } catch (e) { /* already disposed */ }
+      try { if (osc2Node) { osc2Node.stop(); osc2Node.disconnect(); } } catch (e) { /* already disposed */ }
+      try { env.disconnect(); } catch (e) { /* already disposed */ }
+      try { voiceGain.disconnect(); } catch (e) { /* already disposed */ }
+    }, cleanupMs);
+  }
+
+  function startSequencer() {
+    if (!state.powered || seqState.running) return;
+
+    Tone.Transport.bpm.value = seqState.bpm;
+
+    const indices = Array.from({ length: seqState.steps }, (_, i) => i);
+    seqLoop = new Tone.Sequence((time, stepIdx) => {
+      // Store current step for UI polling
+      seqState.currentStep = stepIdx;
+
+      const step = seqState.pattern[stepIdx];
+      if (step.active) {
+        seqTriggerNote(step.note, time);
+      }
+    }, indices, '16n');
+
+    seqLoop.start(0);
+    Tone.Transport.start();
+    seqState.running = true;
+
+    // Poll current step for UI updates on each animation frame
+    requestAnimationFrame(seqUILoop);
+
+    const btn = document.getElementById('seq-play-btn');
+    if (btn) { btn.textContent = '■ Stop'; btn.classList.add('active'); }
+  }
+
+  function stopSequencer() {
+    if (seqLoop) {
+      seqLoop.stop();
+      seqLoop.dispose();
+      seqLoop = null;
+    }
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+
+    seqState.running = false;
+    seqState.currentStep = -1;
+    updateSeqStepDisplay(-1);
+
+    const btn = document.getElementById('seq-play-btn');
+    if (btn) { btn.textContent = '▶ Play'; btn.classList.remove('active'); }
+  }
+
+  function seqUILoop() {
+    if (!seqState.running) return;
+    updateSeqStepDisplay(seqState.currentStep);
+    requestAnimationFrame(seqUILoop);
+  }
+
   // ===== VISUALIZER =====
   let animFrame;
   function startVisualizer() {
@@ -593,6 +769,7 @@
         initAudio();
       } else {
         allNotesOff();
+        stopSequencer();
         state.powered = false;
         updatePowerUI(false);
       }
@@ -754,6 +931,44 @@
     // Initial draws
     drawADSR();
     startVisualizer();
+
+    // ===== SEQUENCER SETUP =====
+    buildSequencerGrid();
+
+    document.getElementById('seq-play-btn')?.addEventListener('click', () => {
+      if (!state.powered) {
+        // Start audio then sequencer
+        initAudio();
+        return;
+      }
+      if (seqState.running) {
+        stopSequencer();
+      } else {
+        startSequencer();
+      }
+    });
+
+    document.getElementById('seq-bpm-down')?.addEventListener('click', () => {
+      seqState.bpm = Math.max(SEQ_BPM_MIN, seqState.bpm - SEQ_BPM_STEP);
+      document.getElementById('seq-bpm-display').textContent = seqState.bpm;
+      if (seqState.running) Tone.Transport.bpm.value = seqState.bpm;
+    });
+
+    document.getElementById('seq-bpm-up')?.addEventListener('click', () => {
+      seqState.bpm = Math.min(SEQ_BPM_MAX, seqState.bpm + SEQ_BPM_STEP);
+      document.getElementById('seq-bpm-display').textContent = seqState.bpm;
+      if (seqState.running) Tone.Transport.bpm.value = seqState.bpm;
+    });
+
+    document.getElementById('seq-clear-btn')?.addEventListener('click', () => {
+      seqState.pattern.forEach((step, i) => {
+        step.active = false;
+        const pad = document.querySelector(`.seq-step-pad[data-step="${i}"]`);
+        const cell = document.querySelector(`.seq-step[data-step="${i}"]`);
+        if (pad) pad.classList.remove('active');
+        if (cell) cell.classList.remove('seq-step--active');
+      });
+    });
 
     // Initialize knob value displays
     document.querySelectorAll('.knob-group').forEach(group => {
