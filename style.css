@@ -576,3 +576,178 @@ body {
   background: var(--border);
   border-radius: 2px;
 }
+
+/* ===== SEQUENCER ===== */
+.sequencer-section {
+  background: linear-gradient(180deg, #131530 0%, #0e1025 100%);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.sequencer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.seq-transport {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.seq-bpm-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.seq-bpm-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.seq-bpm-btn {
+  background: var(--knob-bg);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.seq-bpm-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.seq-bpm-display {
+  font-size: 1rem;
+  color: var(--accent-2);
+  min-width: 36px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.seq-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 6px;
+}
+
+.seq-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Visual grouping: separator border before the start of each group of 4 steps */
+.seq-step:nth-child(4n+1):not(:first-child) {
+  margin-left: 4px;
+  padding-left: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.seq-step-pad {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--knob-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.55rem;
+  color: var(--text-secondary);
+  transition: all 0.1s;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seq-step-pad:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.seq-step-pad.active {
+  background: rgba(233, 69, 96, 0.25);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 8px rgba(233, 69, 96, 0.3);
+}
+
+.seq-step-pad.playing {
+  background: rgba(245, 166, 35, 0.2);
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+  box-shadow: 0 0 10px rgba(245, 166, 35, 0.4);
+}
+
+.seq-step-pad.active.playing {
+  background: rgba(245, 166, 35, 0.4);
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+  box-shadow: 0 0 14px rgba(245, 166, 35, 0.7);
+}
+
+.seq-note-select {
+  width: 100%;
+  background: var(--knob-bg);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 2px 0;
+  border-radius: 4px;
+  font-size: 0.5rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.seq-note-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Highlight note select when its step is active */
+.seq-step.seq-step--active .seq-note-select {
+  border-color: rgba(233, 69, 96, 0.5);
+  color: var(--text-primary);
+}
+
+@media (max-width: 900px) {
+  .seq-grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+  .seq-step:nth-child(4n+1):not(:first-child) {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .sequencer-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .seq-grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}

@@ -277,6 +277,28 @@
       </div>
     </div>
 
+    <!-- SEQUENCER -->
+    <div class="sequencer-section">
+      <div class="sequencer-header">
+        <div class="section-label" style="margin:0; border:none; padding:0;">Step Sequencer</div>
+        <div class="seq-transport">
+          <button id="seq-play-btn" class="toggle-btn">▶ Play</button>
+          <div class="seq-bpm-group">
+            <span class="knob-label">BPM</span>
+            <div class="seq-bpm-controls">
+              <button class="seq-bpm-btn" id="seq-bpm-down">−</button>
+              <span id="seq-bpm-display" class="seq-bpm-display">120</span>
+              <button class="seq-bpm-btn" id="seq-bpm-up">+</button>
+            </div>
+          </div>
+          <button id="seq-clear-btn" class="toggle-btn" style="font-size:0.55rem;">Clear</button>
+        </div>
+      </div>
+      <div id="seq-grid" class="seq-grid">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
   </main>
 
   <!-- Footer -->
