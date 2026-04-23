@@ -615,12 +615,12 @@
         const numCycles = 2.5;
         const amp = (H / 2) * 0.75;
         const mid = H / 2;
-        let prevFloor = -1;
+        let lastCycleIndex = -1;
 
         for (let i = 0; i <= W; i++) {
           const tNorm = (i / W) * numCycles;
           const cyclePos = tNorm % 1;
-          const cycleFloor = Math.floor(tNorm);
+          const cycleIndex = Math.floor(tNorm);
           const angle = tNorm * 2 * Math.PI;
 
           let y;
@@ -633,13 +633,13 @@
           }
 
           const py = mid - y * amp;
-          const isSawDiscontinuity = type === 'sawtooth' && i > 0 && cycleFloor !== prevFloor;
+          const isSawDiscontinuity = type === 'sawtooth' && i > 0 && cycleIndex !== lastCycleIndex;
           if (i === 0 || isSawDiscontinuity) {
             ctx.moveTo(i, py);
           } else {
             ctx.lineTo(i, py);
           }
-          prevFloor = cycleFloor;
+          lastCycleIndex = cycleIndex;
         }
 
         ctx.stroke();
