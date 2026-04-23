@@ -270,6 +270,100 @@
     .tut-preset-btn.active .preset-desc {
       opacity: 0.8;
     }
+
+    /* ===== FILTER INTERACTIVE DEMO ===== */
+    .filter-demo-box {
+      background: rgba(10, 10, 30, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 14px 0;
+    }
+
+    .filter-type-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .filter-type-btn {
+      background: var(--knob-bg);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 5px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: all 0.15s;
+    }
+
+    .filter-type-btn:hover {
+      border-color: var(--accent-2);
+      color: var(--text-primary);
+    }
+
+    .filter-type-btn.active {
+      background: rgba(245, 166, 35, 0.2);
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+    }
+
+    .filter-response-canvas {
+      display: block;
+      width: 100%;
+      height: 110px;
+      border-radius: 6px;
+      border: 1px solid rgba(42, 74, 122, 0.5);
+      margin: 0 0 12px;
+    }
+
+    .filter-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .filter-slider-label {
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      color: var(--accent-2);
+      text-transform: uppercase;
+      white-space: nowrap;
+      min-width: 72px;
+    }
+
+    .filter-slider {
+      flex: 1;
+      max-width: 260px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .filter-slider-val {
+      font-size: 0.62rem;
+      color: var(--text-primary);
+      min-width: 58px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ===== COMBINED OSC + FILTER DEMO ===== */
+    .combo-demo-box {
+      background: rgba(10, 10, 30, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 14px 0;
+    }
+
+    .combo-demo-box .osc-wave-row {
+      margin-bottom: 14px;
+    }
   </style>
 </head>
 <body>
@@ -439,6 +533,163 @@
       <p>
         <strong>Allpass</strong> — Passes all frequencies but shifts their phase, which is useful for creating phaser-like effects.
       </p>
+
+      <!-- Interactive Filter Demo -->
+      <div class="filter-demo-box">
+
+        <!-- Filter Type Buttons -->
+        <div class="osc-demo-label">Filter Type</div>
+        <div class="filter-type-row">
+          <button class="filter-type-btn tut-ftype-btn active" data-ftype="lowpass">Lowpass</button>
+          <button class="filter-type-btn tut-ftype-btn" data-ftype="highpass">Highpass</button>
+          <button class="filter-type-btn tut-ftype-btn" data-ftype="bandpass">Bandpass</button>
+          <button class="filter-type-btn tut-ftype-btn" data-ftype="notch">Notch</button>
+        </div>
+
+        <!-- Frequency Response Visualization -->
+        <canvas id="tut-filter-canvas" class="filter-response-canvas" width="760" height="110"></canvas>
+
+        <!-- Cutoff Slider -->
+        <div class="filter-slider-row">
+          <span class="filter-slider-label">Cutoff</span>
+          <input type="range" id="tut-filter-freq" class="filter-slider" min="0" max="1" step="0.001" value="0.566" />
+          <span id="tut-filter-freq-val" class="filter-slider-val">1.0 kHz</span>
+        </div>
+
+        <!-- Resonance Slider -->
+        <div class="filter-slider-row">
+          <span class="filter-slider-label">Resonance</span>
+          <input type="range" id="tut-filter-q" class="filter-slider" min="0.1" max="20" step="0.1" value="1" />
+          <span id="tut-filter-q-val" class="filter-slider-val">1.0</span>
+        </div>
+
+        <!-- Play / Stop -->
+        <div class="osc-play-row">
+          <button id="tut-filter-play-btn" class="tut-play-btn">▶ PLAY NOTE</button>
+          <span class="tut-play-hint">Sawtooth wave through the filter · Adjust controls while playing</span>
+        </div>
+      </div>
+
+      <!-- Filter Preset Examples -->
+      <div class="osc-presets-box">
+        <div class="osc-presets-label">Preset examples — click to load &amp; play:</div>
+        <div class="osc-presets-row">
+          <button class="tut-preset-btn tut-fpreset-btn" data-fpreset="darkbass" title="Lowpass with very low cutoff — deep, muffled bass">
+            <span class="preset-name">Dark Bass</span>
+            <span class="preset-desc">LP · 200 Hz · Q 1</span>
+          </button>
+          <button class="tut-preset-btn tut-fpreset-btn" data-fpreset="telephone" title="Bandpass with high resonance — classic telephone effect">
+            <span class="preset-name">Telephone</span>
+            <span class="preset-desc">BP · 1 kHz · Q 8</span>
+          </button>
+          <button class="tut-preset-btn tut-fpreset-btn" data-fpreset="brightlead" title="Highpass — cuts lows, lets harmonics through">
+            <span class="preset-name">Bright Lead</span>
+            <span class="preset-desc">HP · 800 Hz · Q 2</span>
+          </button>
+          <button class="tut-preset-btn tut-fpreset-btn" data-fpreset="resonant" title="Lowpass with high resonance — sharp whistling peak">
+            <span class="preset-name">Resonant</span>
+            <span class="preset-desc">LP · 600 Hz · Q 12</span>
+          </button>
+          <button class="tut-preset-btn tut-fpreset-btn" data-fpreset="open" title="Lowpass fully open — all harmonics pass through">
+            <span class="preset-name">Wide Open</span>
+            <span class="preset-desc">LP · 18 kHz · Q 1</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMBINED: OSCILLATOR + FILTER -->
+    <div class="tutorial-section">
+      <h2>Oscillator + Filter — Putting It Together</h2>
+      <p>
+        Now combine what you've learned. Pick a waveform and a filter type, then sweep the cutoff to hear how the two interact. This pairing — oscillator into filter — is the core of subtractive synthesis.
+      </p>
+
+      <div class="combo-demo-box">
+
+        <!-- Waveform Selector -->
+        <div class="osc-demo-label">Oscillator Waveform</div>
+        <div class="osc-wave-row">
+          <button class="wave-btn tut-combo-wave-btn active" data-wave="sawtooth" title="Sawtooth">
+            <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 13 L12 1 L12 13 L24 1"/></svg>
+            Sawtooth
+          </button>
+          <button class="wave-btn tut-combo-wave-btn" data-wave="square" title="Square">
+            <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 13 L0 1 L12 1 L12 13 L24 13 L24 1"/></svg>
+            Square
+          </button>
+          <button class="wave-btn tut-combo-wave-btn" data-wave="triangle" title="Triangle">
+            <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7 L6 1 L18 13 L24 7"/></svg>
+            Triangle
+          </button>
+          <button class="wave-btn tut-combo-wave-btn" data-wave="sine" title="Sine">
+            <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7 Q6 0 12 7 Q18 14 24 7"/></svg>
+            Sine
+          </button>
+        </div>
+
+        <!-- Filter Type Buttons -->
+        <div class="osc-demo-label">Filter Type</div>
+        <div class="filter-type-row">
+          <button class="filter-type-btn tut-combo-ftype-btn active" data-ftype="lowpass">Lowpass</button>
+          <button class="filter-type-btn tut-combo-ftype-btn" data-ftype="highpass">Highpass</button>
+          <button class="filter-type-btn tut-combo-ftype-btn" data-ftype="bandpass">Bandpass</button>
+          <button class="filter-type-btn tut-combo-ftype-btn" data-ftype="notch">Notch</button>
+        </div>
+
+        <!-- Cutoff Slider -->
+        <div class="filter-slider-row">
+          <span class="filter-slider-label">Cutoff</span>
+          <input type="range" id="tut-combo-freq" class="filter-slider" min="0" max="1" step="0.001" value="0.566" />
+          <span id="tut-combo-freq-val" class="filter-slider-val">1.0 kHz</span>
+        </div>
+
+        <!-- Resonance Slider -->
+        <div class="filter-slider-row">
+          <span class="filter-slider-label">Resonance</span>
+          <input type="range" id="tut-combo-q" class="filter-slider" min="0.1" max="20" step="0.1" value="1" />
+          <span id="tut-combo-q-val" class="filter-slider-val">1.0</span>
+        </div>
+
+        <!-- Play / Stop -->
+        <div class="osc-play-row">
+          <button id="tut-combo-play-btn" class="tut-play-btn">▶ PLAY NOTE</button>
+          <span class="tut-play-hint">Click to audition · Audio starts on first press</span>
+        </div>
+      </div>
+
+      <!-- Combined Preset Examples -->
+      <div class="osc-presets-box">
+        <div class="osc-presets-label">Preset examples — click to load &amp; play:</div>
+        <div class="osc-presets-row">
+          <button class="tut-preset-btn tut-combo-preset-btn" data-cpreset="acidbass" title="Square + resonant lowpass — classic TB-303 acid bass">
+            <span class="preset-name">Acid Bass</span>
+            <span class="preset-desc">Square · LP · Q 14</span>
+          </button>
+          <button class="tut-preset-btn tut-combo-preset-btn" data-cpreset="darkpad" title="Triangle + gentle lowpass — warm, dark pad">
+            <span class="preset-name">Dark Pad</span>
+            <span class="preset-desc">Triangle · LP · 500 Hz</span>
+          </button>
+          <button class="tut-preset-btn tut-combo-preset-btn" data-cpreset="telephone" title="Sawtooth + bandpass — classic telephone effect">
+            <span class="preset-name">Telephone</span>
+            <span class="preset-desc">Saw · BP · 1 kHz</span>
+          </button>
+          <button class="tut-preset-btn tut-combo-preset-btn" data-cpreset="brightlead" title="Sawtooth + highpass — bright, cutting lead">
+            <span class="preset-name">Bright Lead</span>
+            <span class="preset-desc">Saw · HP · 800 Hz</span>
+          </button>
+          <button class="tut-preset-btn tut-combo-preset-btn" data-cpreset="resosynth" title="Sawtooth + resonant lowpass — classic filter sweep sound">
+            <span class="preset-name">Reso Synth</span>
+            <span class="preset-desc">Saw · LP · High Q</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p>
+          <strong>Tip:</strong> The <strong>sawtooth</strong> wave is richest in harmonics, so it responds most dramatically to filter changes. Try sweeping the cutoff on a sawtooth with high resonance for the classic <em>filter sweep</em> heard in countless electronic music tracks.
+        </p>
+      </div>
     </div>
 
     <!-- ENVELOPE -->
@@ -803,6 +1054,447 @@
             document.querySelectorAll('.tut-preset-btn').forEach(function (b) { b.classList.remove('active'); });
             this.classList.add('active');
             applyPreset(this.dataset.preset);
+          });
+        });
+      });
+    })();
+  </script>
+
+  <!-- Filter Tutorial Interactive Demo -->
+  <script>
+    (function () {
+      'use strict';
+
+      var filterAudioReady = false;
+      var fVoice = null, fFilter = null;
+      var fPlaying = false;
+
+      var fState = {
+        type:   'lowpass',
+        cutoff: 1000,
+        Q:      1
+      };
+
+      /* Logarithmic mapping for the cutoff slider (20 Hz – 20 kHz) */
+      var F_LOG_MIN   = Math.log(20);
+      var F_LOG_RANGE = Math.log(20000) - Math.log(20);
+
+      function sliderToFreq(v) {
+        return Math.exp(F_LOG_MIN + parseFloat(v) * F_LOG_RANGE);
+      }
+
+      function freqToSlider(f) {
+        return (Math.log(f) - F_LOG_MIN) / F_LOG_RANGE;
+      }
+
+      function freqDisplay(f) {
+        return f >= 1000 ? (f / 1000).toFixed(1) + ' kHz' : Math.round(f) + ' Hz';
+      }
+
+      /* Draw a simplified frequency-response curve for the selected filter */
+      function drawFilterResponse() {
+        var canvas = document.getElementById('tut-filter-canvas');
+        if (!canvas) return;
+        var ctx = canvas.getContext('2d');
+        var W = canvas.width, H = canvas.height;
+
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = '#05050f';
+        ctx.fillRect(0, 0, W, H);
+
+        var logMin = Math.log10(20), logMax = Math.log10(20000);
+        var DB_MIN = -60, DB_MAX = 24;
+
+        function freqToX(f) {
+          return ((Math.log10(f) - logMin) / (logMax - logMin)) * W;
+        }
+        function dbToY(db) {
+          var clamped = Math.max(DB_MIN, Math.min(DB_MAX, db));
+          return H - ((clamped - DB_MIN) / (DB_MAX - DB_MIN)) * H;
+        }
+
+        /* Frequency grid lines */
+        ctx.strokeStyle = 'rgba(42, 74, 122, 0.35)';
+        ctx.lineWidth = 1;
+        [100, 1000, 10000].forEach(function (f) {
+          var x = freqToX(f);
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        });
+
+        /* 0 dB reference */
+        var y0 = dbToY(0);
+        ctx.strokeStyle = 'rgba(100, 120, 180, 0.45)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y0); ctx.stroke();
+        ctx.setLineDash([]);
+
+        /* Cutoff marker */
+        var cx = freqToX(fState.cutoff);
+        ctx.strokeStyle = 'rgba(233, 69, 96, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke();
+        ctx.setLineDash([]);
+
+        /* Filter curve (2nd-order biquad approximation) */
+        ctx.strokeStyle = '#f5a623';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = 'rgba(245, 166, 35, 0.55)';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        for (var i = 0; i <= W; i++) {
+          var f = Math.pow(10, logMin + (i / W) * (logMax - logMin));
+          var r = f / fState.cutoff;
+          var Q = fState.Q;
+          var denom = Math.sqrt(Math.pow(1 - r * r, 2) + Math.pow(r / Q, 2));
+          var gain;
+          switch (fState.type) {
+            case 'lowpass':  gain = 1 / denom; break;
+            case 'highpass': gain = (r * r) / denom; break;
+            case 'bandpass': gain = (r / Q) / denom; break;
+            case 'notch':    gain = Math.abs(1 - r * r) / denom; break;
+            default:         gain = 1;
+          }
+          var db = 20 * Math.log10(Math.max(gain, 1e-6));
+          var y = dbToY(db);
+          if (i === 0) ctx.moveTo(i, y); else ctx.lineTo(i, y);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        /* Axis labels */
+        ctx.fillStyle = 'rgba(100, 130, 180, 0.6)';
+        ctx.font = '9px monospace';
+        ctx.fillText('0 dB', 4, y0 - 3);
+        ctx.fillText('100',  freqToX(100) + 3,   H - 4);
+        ctx.fillText('1k',   freqToX(1000) + 3,  H - 4);
+        ctx.fillText('10k',  freqToX(10000) + 3, H - 4);
+      }
+
+      function stopFVoice() {
+        if (fVoice) { try { fVoice.triggerRelease(); } catch (e) {} }
+        fPlaying = false;
+      }
+
+      function disposeFVoice() {
+        if (fVoice)  { try { fVoice.dispose(); }   catch (e) {} fVoice = null; }
+        if (fFilter) { try { fFilter.dispose(); }  catch (e) {} fFilter = null; }
+      }
+
+      function startFVoice() {
+        stopFVoice();
+        disposeFVoice();
+
+        var gain = new Tone.Gain(0.55).toDestination();
+        fFilter = new Tone.Filter(fState.cutoff, fState.type);
+        fFilter.Q.value = fState.Q;
+        fFilter.connect(gain);
+
+        fVoice = new Tone.Synth({
+          oscillator: { type: 'sawtooth' },
+          envelope: { attack: 0.04, decay: 0.1, sustain: 0.9, release: 1.5 }
+        }).connect(fFilter);
+
+        fVoice.triggerAttack('A2');
+        fPlaying = true;
+      }
+
+      function setFPlayBtn() {
+        var btn = document.getElementById('tut-filter-play-btn');
+        if (!btn) return;
+        if (fPlaying) {
+          btn.textContent = '■ STOP';
+          btn.classList.add('active');
+        } else {
+          btn.textContent = '▶ PLAY NOTE';
+          btn.classList.remove('active');
+        }
+      }
+
+      /* Update live audio if playing; always redraw response curve */
+      function updateFilter() {
+        if (fFilter) {
+          fFilter.frequency.rampTo(fState.cutoff, 0.03);
+          fFilter.Q.value = fState.Q;
+          fFilter.type = fState.type;
+        }
+        drawFilterResponse();
+      }
+
+      function applyFPreset(preset) {
+        var presets = {
+          darkbass:   { type: 'lowpass',  cutoff: 200,   Q: 1  },
+          telephone:  { type: 'bandpass', cutoff: 1000,  Q: 8  },
+          brightlead: { type: 'highpass', cutoff: 800,   Q: 2  },
+          resonant:   { type: 'lowpass',  cutoff: 600,   Q: 12 },
+          open:       { type: 'lowpass',  cutoff: 18000, Q: 1  }
+        };
+        var p = presets[preset];
+        if (!p) return;
+
+        fState.type   = p.type;
+        fState.cutoff = p.cutoff;
+        fState.Q      = p.Q;
+
+        document.querySelectorAll('.tut-ftype-btn').forEach(function (b) {
+          b.classList.toggle('active', b.dataset.ftype === p.type);
+        });
+
+        var freqSlider = document.getElementById('tut-filter-freq');
+        var freqVal    = document.getElementById('tut-filter-freq-val');
+        if (freqSlider) {
+          freqSlider.value = freqToSlider(p.cutoff);
+          freqVal.textContent = freqDisplay(p.cutoff);
+        }
+
+        var qSlider = document.getElementById('tut-filter-q');
+        var qVal    = document.getElementById('tut-filter-q-val');
+        if (qSlider) {
+          qSlider.value = p.Q;
+          qVal.textContent = p.Q.toFixed(1);
+        }
+
+        if (filterAudioReady) {
+          startFVoice();
+          setFPlayBtn();
+        } else {
+          drawFilterResponse();
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        drawFilterResponse();
+
+        /* Filter type buttons */
+        document.querySelectorAll('.tut-ftype-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.tut-ftype-btn').forEach(function (b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            fState.type = this.dataset.ftype;
+            updateFilter();
+          });
+        });
+
+        /* Cutoff slider */
+        document.getElementById('tut-filter-freq').addEventListener('input', function () {
+          fState.cutoff = sliderToFreq(this.value);
+          document.getElementById('tut-filter-freq-val').textContent = freqDisplay(fState.cutoff);
+          updateFilter();
+        });
+
+        /* Q slider */
+        document.getElementById('tut-filter-q').addEventListener('input', function () {
+          fState.Q = parseFloat(this.value);
+          document.getElementById('tut-filter-q-val').textContent = fState.Q.toFixed(1);
+          updateFilter();
+        });
+
+        /* Play / Stop */
+        document.getElementById('tut-filter-play-btn').addEventListener('click', async function () {
+          if (!filterAudioReady) {
+            await Tone.start();
+            filterAudioReady = true;
+          }
+          if (fPlaying) {
+            stopFVoice();
+            disposeFVoice();
+          } else {
+            startFVoice();
+          }
+          setFPlayBtn();
+        });
+
+        /* Preset buttons */
+        document.querySelectorAll('.tut-fpreset-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.tut-fpreset-btn').forEach(function (b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            applyFPreset(this.dataset.fpreset);
+          });
+        });
+      });
+    })();
+  </script>
+
+  <!-- Combined Oscillator + Filter Tutorial Demo -->
+  <script>
+    (function () {
+      'use strict';
+
+      var comboAudioReady = false;
+      var cVoice = null, cFilter = null;
+      var cPlaying = false;
+
+      var cState = {
+        wave:       'sawtooth',
+        filterType: 'lowpass',
+        cutoff:     1000,
+        Q:          1
+      };
+
+      var C_LOG_MIN   = Math.log(20);
+      var C_LOG_RANGE = Math.log(20000) - Math.log(20);
+
+      function sliderToFreq(v) {
+        return Math.exp(C_LOG_MIN + parseFloat(v) * C_LOG_RANGE);
+      }
+
+      function freqToSlider(f) {
+        return (Math.log(f) - C_LOG_MIN) / C_LOG_RANGE;
+      }
+
+      function freqDisplay(f) {
+        return f >= 1000 ? (f / 1000).toFixed(1) + ' kHz' : Math.round(f) + ' Hz';
+      }
+
+      function stopCVoice() {
+        if (cVoice) { try { cVoice.triggerRelease(); } catch (e) {} }
+        cPlaying = false;
+      }
+
+      function disposeCVoice() {
+        if (cVoice)  { try { cVoice.dispose(); }  catch (e) {} cVoice = null; }
+        if (cFilter) { try { cFilter.dispose(); } catch (e) {} cFilter = null; }
+      }
+
+      function startCVoice() {
+        stopCVoice();
+        disposeCVoice();
+
+        var gain = new Tone.Gain(0.55).toDestination();
+        cFilter = new Tone.Filter(cState.cutoff, cState.filterType);
+        cFilter.Q.value = cState.Q;
+        cFilter.connect(gain);
+
+        cVoice = new Tone.Synth({
+          oscillator: { type: cState.wave },
+          envelope: { attack: 0.04, decay: 0.1, sustain: 0.9, release: 1.5 }
+        }).connect(cFilter);
+
+        cVoice.triggerAttack('C3');
+        cPlaying = true;
+      }
+
+      function setCPlayBtn() {
+        var btn = document.getElementById('tut-combo-play-btn');
+        if (!btn) return;
+        if (cPlaying) {
+          btn.textContent = '■ STOP';
+          btn.classList.add('active');
+        } else {
+          btn.textContent = '▶ PLAY NOTE';
+          btn.classList.remove('active');
+        }
+      }
+
+      function updateCFilter() {
+        if (cFilter) {
+          cFilter.frequency.rampTo(cState.cutoff, 0.03);
+          cFilter.Q.value = cState.Q;
+          cFilter.type = cState.filterType;
+        }
+      }
+
+      function applyCPreset(preset) {
+        var presets = {
+          acidbass:   { wave: 'square',   filterType: 'lowpass',  cutoff: 300,  Q: 14 },
+          darkpad:    { wave: 'triangle', filterType: 'lowpass',  cutoff: 500,  Q: 2  },
+          telephone:  { wave: 'sawtooth', filterType: 'bandpass', cutoff: 1000, Q: 8  },
+          brightlead: { wave: 'sawtooth', filterType: 'highpass', cutoff: 800,  Q: 2  },
+          resosynth:  { wave: 'sawtooth', filterType: 'lowpass',  cutoff: 800,  Q: 10 }
+        };
+        var p = presets[preset];
+        if (!p) return;
+
+        cState.wave       = p.wave;
+        cState.filterType = p.filterType;
+        cState.cutoff     = p.cutoff;
+        cState.Q          = p.Q;
+
+        document.querySelectorAll('.tut-combo-wave-btn').forEach(function (b) {
+          b.classList.toggle('active', b.dataset.wave === p.wave);
+        });
+        document.querySelectorAll('.tut-combo-ftype-btn').forEach(function (b) {
+          b.classList.toggle('active', b.dataset.ftype === p.filterType);
+        });
+
+        var freqSlider = document.getElementById('tut-combo-freq');
+        var freqVal    = document.getElementById('tut-combo-freq-val');
+        if (freqSlider) {
+          freqSlider.value = freqToSlider(p.cutoff);
+          freqVal.textContent = freqDisplay(p.cutoff);
+        }
+
+        var qSlider = document.getElementById('tut-combo-q');
+        var qVal    = document.getElementById('tut-combo-q-val');
+        if (qSlider) {
+          qSlider.value = p.Q;
+          qVal.textContent = p.Q.toFixed(1);
+        }
+
+        if (comboAudioReady) {
+          startCVoice();
+          setCPlayBtn();
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+
+        /* Waveform buttons */
+        document.querySelectorAll('.tut-combo-wave-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.tut-combo-wave-btn').forEach(function (b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            cState.wave = this.dataset.wave;
+            if (cPlaying && comboAudioReady) startCVoice();
+          });
+        });
+
+        /* Filter type buttons */
+        document.querySelectorAll('.tut-combo-ftype-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.tut-combo-ftype-btn').forEach(function (b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            cState.filterType = this.dataset.ftype;
+            updateCFilter();
+          });
+        });
+
+        /* Cutoff slider */
+        document.getElementById('tut-combo-freq').addEventListener('input', function () {
+          cState.cutoff = sliderToFreq(this.value);
+          document.getElementById('tut-combo-freq-val').textContent = freqDisplay(cState.cutoff);
+          updateCFilter();
+        });
+
+        /* Q slider */
+        document.getElementById('tut-combo-q').addEventListener('input', function () {
+          cState.Q = parseFloat(this.value);
+          document.getElementById('tut-combo-q-val').textContent = cState.Q.toFixed(1);
+          updateCFilter();
+        });
+
+        /* Play / Stop */
+        document.getElementById('tut-combo-play-btn').addEventListener('click', async function () {
+          if (!comboAudioReady) {
+            await Tone.start();
+            comboAudioReady = true;
+          }
+          if (cPlaying) {
+            stopCVoice();
+            disposeCVoice();
+          } else {
+            startCVoice();
+          }
+          setCPlayBtn();
+        });
+
+        /* Preset buttons */
+        document.querySelectorAll('.tut-combo-preset-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.tut-combo-preset-btn').forEach(function (b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            applyCPreset(this.dataset.cpreset);
           });
         });
       });
