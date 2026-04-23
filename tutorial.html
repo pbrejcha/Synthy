@@ -91,6 +91,184 @@
     .term {
       color: var(--accent);
     }
+
+    /* ===== OSCILLATOR INTERACTIVE DEMO ===== */
+    .osc-demo-box {
+      background: rgba(10, 10, 30, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 14px 0;
+    }
+
+    .osc-demo-label {
+      font-size: 0.58rem;
+      letter-spacing: 2px;
+      color: var(--accent-2);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .osc-wave-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .osc-wave-row .wave-btn {
+      flex-direction: column;
+      gap: 3px;
+      padding: 6px 12px;
+      font-size: 0.55rem;
+      letter-spacing: 1px;
+    }
+
+    .tut-wave-canvas {
+      display: block;
+      width: 100%;
+      height: 90px;
+      border-radius: 6px;
+      border: 1px solid rgba(42, 74, 122, 0.5);
+      margin: 12px 0 6px;
+    }
+
+    .tut-wave-desc {
+      font-size: 0.72rem;
+      color: var(--accent-2);
+      line-height: 1.6;
+      font-style: italic;
+      min-height: 2.4em;
+      margin-bottom: 14px;
+    }
+
+    .osc2-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+
+    .osc-detune-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .tut-detune-slider {
+      flex: 1;
+      max-width: 180px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .osc-play-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(42, 74, 122, 0.4);
+    }
+
+    .tut-play-btn {
+      background: var(--knob-bg);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.65rem;
+      font-family: inherit;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: all 0.15s;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .tut-play-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .tut-play-btn.active {
+      background: rgba(233, 69, 96, 0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 10px rgba(233, 69, 96, 0.4);
+    }
+
+    .tut-play-hint {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      letter-spacing: 1px;
+      font-style: italic;
+    }
+
+    .osc-presets-box {
+      margin-top: 4px;
+      margin-bottom: 14px;
+    }
+
+    .osc-presets-label {
+      font-size: 0.58rem;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .osc-presets-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tut-preset-btn {
+      background: var(--knob-bg);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      min-width: 90px;
+    }
+
+    .tut-preset-btn:hover {
+      border-color: var(--accent-2);
+      color: var(--text-primary);
+    }
+
+    .tut-preset-btn.active {
+      background: rgba(245, 166, 35, 0.15);
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+    }
+
+    .preset-name {
+      font-size: 0.65rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: inherit;
+    }
+
+    .preset-desc {
+      font-size: 0.52rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    .tut-preset-btn.active .preset-desc {
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
@@ -126,20 +304,103 @@
         An <span class="term">oscillator</span> is the sound source of a synthesizer. It continuously generates a repeating waveform at a chosen pitch. The shape of the waveform determines the raw timbre (tone color) before any processing.
       </p>
       <p>
-        Synthy provides two independent oscillators. Each supports four classic waveforms:
+        Synthy provides two independent oscillators. Each supports four classic waveforms — select one below to see its shape and hear how it sounds:
       </p>
-      <p>
-        <strong>Sine</strong> — The purest waveform, containing only the fundamental frequency with no overtones. It produces a soft, flute-like tone.
-      </p>
-      <p>
-        <strong>Triangle</strong> — Similar to a sine wave but with a small number of odd harmonics. Slightly brighter with a hollow, woody character.
-      </p>
-      <p>
-        <strong>Sawtooth</strong> — Contains all harmonics (both odd and even) at decreasing amplitude. This creates a bright, buzzy sound ideal for leads and bass lines.
-      </p>
-      <p>
-        <strong>Square</strong> — Contains only odd harmonics, giving it a hollow, reedy quality reminiscent of a clarinet or vintage video game sounds.
-      </p>
+
+      <!-- Interactive Oscillator Demo -->
+      <div class="osc-demo-box">
+
+        <!-- OSC 1 Waveform Selector -->
+        <div class="osc-demo-label">Oscillator 1 — Waveform</div>
+        <div class="osc-wave-row">
+          <button class="wave-btn tut-osc1-btn active" data-wave="sine" title="Sine">
+            <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7 Q6 0 12 7 Q18 14 24 7"/></svg>
+            Sine
+          </button>
+          <button class="wave-btn tut-osc1-btn" data-wave="triangle" title="Triangle">
+            <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7 L6 1 L18 13 L24 7"/></svg>
+            Triangle
+          </button>
+          <button class="wave-btn tut-osc1-btn" data-wave="sawtooth" title="Sawtooth">
+            <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 13 L12 1 L12 13 L24 1"/></svg>
+            Sawtooth
+          </button>
+          <button class="wave-btn tut-osc1-btn" data-wave="square" title="Square">
+            <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 13 L0 1 L12 1 L12 13 L24 13 L24 1"/></svg>
+            Square
+          </button>
+        </div>
+
+        <!-- Waveform Canvas -->
+        <canvas id="tut-wave-canvas" class="tut-wave-canvas" width="760" height="90"></canvas>
+        <p id="tut-wave-desc" class="tut-wave-desc">Pure and smooth — contains only the fundamental frequency with no overtones. Ideal for subtle, flute-like tones.</p>
+
+        <!-- OSC 2 Toggle & Controls -->
+        <div class="osc2-header">
+          <div class="osc-demo-label" style="margin:0;">Oscillator 2</div>
+          <button id="tut-osc2-toggle" class="toggle-btn" style="font-size:0.55rem; padding:2px 8px;">OFF</button>
+        </div>
+        <div id="tut-osc2-panel" style="display:none;">
+          <div class="osc-wave-row">
+            <button class="wave-btn tut-osc2-btn" data-wave="sine" title="Sine">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7 Q6 0 12 7 Q18 14 24 7"/></svg>
+              Sine
+            </button>
+            <button class="wave-btn tut-osc2-btn" data-wave="triangle" title="Triangle">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7 L6 1 L18 13 L24 7"/></svg>
+              Triangle
+            </button>
+            <button class="wave-btn tut-osc2-btn active" data-wave="sawtooth" title="Sawtooth">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 13 L12 1 L12 13 L24 1"/></svg>
+              Sawtooth
+            </button>
+            <button class="wave-btn tut-osc2-btn" data-wave="square" title="Square">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 13 L0 1 L12 1 L12 13 L24 13 L24 1"/></svg>
+              Square
+            </button>
+          </div>
+          <div class="osc-detune-row">
+            <span class="osc-demo-label" style="margin:0; white-space:nowrap;">Detune</span>
+            <input type="range" id="tut-detune" class="tut-detune-slider" min="-50" max="50" value="0" step="1" />
+            <span id="tut-detune-val" class="knob-value">0</span>
+            <span class="knob-label">cents</span>
+          </div>
+        </div>
+
+        <!-- Play / Stop -->
+        <div class="osc-play-row">
+          <button id="tut-play-btn" class="tut-play-btn">▶ PLAY NOTE</button>
+          <span class="tut-play-hint">Click to audition · Audio starts on first press</span>
+        </div>
+      </div>
+
+      <!-- Preset Examples -->
+      <div class="osc-presets-box">
+        <div class="osc-presets-label">Preset examples — click to load &amp; play:</div>
+        <div class="osc-presets-row">
+          <button class="tut-preset-btn" data-preset="flute" title="Sine wave — pure, flute-like tone">
+            <span class="preset-name">Soft Flute</span>
+            <span class="preset-desc">Sine · No Osc2</span>
+          </button>
+          <button class="tut-preset-btn" data-preset="lead" title="Sawtooth — bright, classic synth lead">
+            <span class="preset-name">Synth Lead</span>
+            <span class="preset-desc">Sawtooth · No Osc2</span>
+          </button>
+          <button class="tut-preset-btn" data-preset="retrobass" title="Square wave — hollow, retro bass">
+            <span class="preset-name">Retro Bass</span>
+            <span class="preset-desc">Square · No Osc2</span>
+          </button>
+          <button class="tut-preset-btn" data-preset="warmpad" title="Triangle + detuned Sawtooth for a warm pad">
+            <span class="preset-name">Warm Pad</span>
+            <span class="preset-desc">Triangle + Saw · +7ct</span>
+          </button>
+          <button class="tut-preset-btn" data-preset="supersaw" title="Two detuned sawtooths — classic trance supersaw">
+            <span class="preset-name">Supersaw</span>
+            <span class="preset-desc">Saw + Saw · +15ct</span>
+          </button>
+        </div>
+      </div>
+
       <div class="tip-box">
         <p>
           <strong>Tip:</strong> Layer <strong>Oscillator 1</strong> and <strong>Oscillator 2</strong> with different waveforms or slight detuning to create a much richer, thicker sound. Even a few cents of detune between two sawtooth oscillators produces the classic "supersaw" sound used in trance and EDM.
@@ -295,6 +556,257 @@
   <footer style="margin-top:16px; color:var(--text-secondary); font-size:0.6rem; letter-spacing:2px; text-align:center;">
     Synthy · Built with Tone.js · Click Power to start audio
   </footer>
+  <!-- Tone.js CDN -->
+  <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
+
+  <!-- Oscillator Tutorial Interactive Demo -->
+  <script>
+    (function () {
+      'use strict';
+
+      let audioReady = false;
+      let voice1 = null, voice2 = null;
+      let isPlaying = false;
+
+      const state = {
+        osc1: 'sine',
+        osc2Enabled: false,
+        osc2Wave: 'sawtooth',
+        detune: 0
+      };
+
+      const PLAY_NOTE = 'C4';
+
+      const waveDescriptions = {
+        sine:     'Pure and smooth — contains only the fundamental frequency with no overtones. Ideal for subtle, flute-like tones.',
+        triangle: 'Slightly brighter than sine — has odd harmonics at low amplitudes. Hollow and woody, like a wooden flute.',
+        sawtooth: 'Bright and buzzy — contains all harmonics (odd and even). Classic for synth leads, strings, and bass lines.',
+        square:   'Hollow and reedy — contains only odd harmonics. Sounds like a clarinet or retro video game music.'
+      };
+
+      function drawWaveform(canvasId, type) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width;
+        const H = canvas.height;
+
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = '#05050f';
+        ctx.fillRect(0, 0, W, H);
+
+        // Center dashed guide line
+        ctx.strokeStyle = 'rgba(42, 74, 122, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(0, H / 2);
+        ctx.lineTo(W, H / 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Draw waveform
+        ctx.strokeStyle = '#e94560';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = 'rgba(233, 69, 96, 0.5)';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+
+        const numCycles = 2.5;
+        const amp = (H / 2) * 0.75;
+        const mid = H / 2;
+        let prevFloor = -1;
+
+        for (let i = 0; i <= W; i++) {
+          const tNorm = (i / W) * numCycles;
+          const cyclePos = tNorm % 1;
+          const cycleFloor = Math.floor(tNorm);
+          const angle = tNorm * 2 * Math.PI;
+
+          let y;
+          switch (type) {
+            case 'sine':     y = Math.sin(angle); break;
+            case 'triangle': y = (2 / Math.PI) * Math.asin(Math.sin(angle)); break;
+            case 'sawtooth': y = -1 + 2 * cyclePos; break;
+            case 'square':   y = cyclePos < 0.5 ? 1 : -1; break;
+            default:         y = Math.sin(angle);
+          }
+
+          const py = mid - y * amp;
+          const isSawDiscontinuity = type === 'sawtooth' && i > 0 && cycleFloor !== prevFloor;
+          if (i === 0 || isSawDiscontinuity) {
+            ctx.moveTo(i, py);
+          } else {
+            ctx.lineTo(i, py);
+          }
+          prevFloor = cycleFloor;
+        }
+
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      function stopVoices() {
+        if (voice1) { try { voice1.triggerRelease(); } catch (e) {} }
+        if (voice2) { try { voice2.triggerRelease(); } catch (e) {} }
+        isPlaying = false;
+      }
+
+      function disposeVoices() {
+        if (voice1) { try { voice1.dispose(); } catch (e) {} voice1 = null; }
+        if (voice2) { try { voice2.dispose(); } catch (e) {} voice2 = null; }
+      }
+
+      function startVoices() {
+        stopVoices();
+        disposeVoices();
+
+        const gain = new Tone.Gain(state.osc2Enabled ? 0.45 : 0.75).toDestination();
+
+        voice1 = new Tone.Synth({
+          oscillator: { type: state.osc1 },
+          envelope: { attack: 0.05, decay: 0.1, sustain: 0.8, release: 1.2 }
+        }).connect(gain);
+
+        if (state.osc2Enabled) {
+          voice2 = new Tone.Synth({
+            oscillator: { type: state.osc2Wave, detune: state.detune },
+            envelope: { attack: 0.05, decay: 0.1, sustain: 0.8, release: 1.2 }
+          }).connect(gain);
+        }
+
+        voice1.triggerAttack(PLAY_NOTE);
+        if (voice2) voice2.triggerAttack(PLAY_NOTE);
+        isPlaying = true;
+      }
+
+      function setPlayBtnState() {
+        const btn = document.getElementById('tut-play-btn');
+        if (!btn) return;
+        if (isPlaying) {
+          btn.textContent = '■ STOP';
+          btn.classList.add('active');
+        } else {
+          btn.textContent = '▶ PLAY NOTE';
+          btn.classList.remove('active');
+        }
+      }
+
+      function applyPreset(preset) {
+        const presets = {
+          flute:     { osc1: 'sine',     osc2: false, osc2Wave: 'sawtooth', detune: 0  },
+          lead:      { osc1: 'sawtooth', osc2: false, osc2Wave: 'sawtooth', detune: 0  },
+          retrobass: { osc1: 'square',   osc2: false, osc2Wave: 'square',   detune: 0  },
+          warmpad:   { osc1: 'triangle', osc2: true,  osc2Wave: 'sawtooth', detune: 7  },
+          supersaw:  { osc1: 'sawtooth', osc2: true,  osc2Wave: 'sawtooth', detune: 15 }
+        };
+        const p = presets[preset];
+        if (!p) return;
+
+        state.osc1        = p.osc1;
+        state.osc2Enabled = p.osc2;
+        state.osc2Wave    = p.osc2Wave;
+        state.detune      = p.detune;
+
+        document.querySelectorAll('.tut-osc1-btn').forEach(function (b) {
+          b.classList.toggle('active', b.dataset.wave === p.osc1);
+        });
+
+        const osc2Toggle = document.getElementById('tut-osc2-toggle');
+        const osc2Panel  = document.getElementById('tut-osc2-panel');
+        osc2Toggle.textContent = p.osc2 ? 'ON' : 'OFF';
+        osc2Toggle.classList.toggle('active', p.osc2);
+        osc2Panel.style.display = p.osc2 ? '' : 'none';
+
+        document.querySelectorAll('.tut-osc2-btn').forEach(function (b) {
+          b.classList.toggle('active', b.dataset.wave === p.osc2Wave);
+        });
+
+        const detuneSlider = document.getElementById('tut-detune');
+        const detuneVal    = document.getElementById('tut-detune-val');
+        if (detuneSlider) {
+          detuneSlider.value = p.detune;
+          detuneVal.textContent = p.detune > 0 ? '+' + p.detune : String(p.detune);
+        }
+
+        drawWaveform('tut-wave-canvas', p.osc1);
+        document.getElementById('tut-wave-desc').textContent = waveDescriptions[p.osc1];
+
+        if (audioReady) {
+          startVoices();
+          setPlayBtnState();
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        drawWaveform('tut-wave-canvas', state.osc1);
+
+        // OSC 1 waveform buttons
+        document.querySelectorAll('.tut-osc1-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.tut-osc1-btn').forEach(function (b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            state.osc1 = this.dataset.wave;
+            drawWaveform('tut-wave-canvas', state.osc1);
+            document.getElementById('tut-wave-desc').textContent = waveDescriptions[state.osc1];
+            if (isPlaying && audioReady) startVoices();
+          });
+        });
+
+        // OSC 2 toggle
+        document.getElementById('tut-osc2-toggle').addEventListener('click', function () {
+          state.osc2Enabled = !state.osc2Enabled;
+          this.textContent = state.osc2Enabled ? 'ON' : 'OFF';
+          this.classList.toggle('active', state.osc2Enabled);
+          document.getElementById('tut-osc2-panel').style.display = state.osc2Enabled ? '' : 'none';
+          if (isPlaying && audioReady) startVoices();
+        });
+
+        // OSC 2 waveform buttons
+        document.querySelectorAll('.tut-osc2-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.tut-osc2-btn').forEach(function (b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            state.osc2Wave = this.dataset.wave;
+            if (isPlaying && audioReady) startVoices();
+          });
+        });
+
+        // Detune slider
+        document.getElementById('tut-detune').addEventListener('input', function () {
+          state.detune = parseInt(this.value, 10);
+          const display = state.detune > 0 ? '+' + state.detune : String(state.detune);
+          document.getElementById('tut-detune-val').textContent = display;
+          if (isPlaying && audioReady) startVoices();
+        });
+
+        // Play / Stop button
+        document.getElementById('tut-play-btn').addEventListener('click', async function () {
+          if (!audioReady) {
+            await Tone.start();
+            audioReady = true;
+          }
+          if (isPlaying) {
+            stopVoices();
+            disposeVoices();
+            setPlayBtnState();
+          } else {
+            startVoices();
+            setPlayBtnState();
+          }
+        });
+
+        // Preset buttons
+        document.querySelectorAll('.tut-preset-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.tut-preset-btn').forEach(function (b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            applyPreset(this.dataset.preset);
+          });
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>
